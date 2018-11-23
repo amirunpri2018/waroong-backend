@@ -34,21 +34,18 @@ export default (config) => {
     return `/**
     * Daftar ${model}
     */
-    router.get('/', a(async (req, res) => {
+    router.get('/', parser('${model}'), a(async (req, res) => {
         // Ambil model
-        const { Sequelize, ${model}${modelImportString} } = models;
-
-        // Variabel
-        let { limit = ${config.limit}, offset = ${config.offset}, q = '' } = req.query;
+        const { ${model}${modelImportString} } = models;
 
         // Data ${model}
         let data = await ${model}.findAndCountAll({
             distinct: true,
-            // Pagination
-            limit, offset,
-            // Search & Filter
-            where: { ${config.search}: { [Sequelize.Op.iLike]: '%' + q + '%' } },
-            // Relasi
+            attributes: req.parsed.attributes,
+            where: { ...req.parsed.filter },
+            order: req.parsed.order,
+            limit: req.parsed.limit,
+            offset: req.parsed.offset,
             include: ${relationString}
         });
 
@@ -61,7 +58,7 @@ export default (config) => {
     /**
      * Satu ${model}
      */
-    router.get('/:id', a(async (req, res) => {
+    router.get('/:id', parser('${model}'), a(async (req, res) => {
         // Ambil model
         const { ${model}${modelImportString} } = models;
 
@@ -69,7 +66,8 @@ export default (config) => {
         let { id } = req.params;
 
         // Data ${model}
-        let data = await ${model}.findOne({ 
+        let data = await ${model}.findOne({
+            attributes: req.parsed.attributes,
             where: { id }, 
             include: ${relationString} 
         });

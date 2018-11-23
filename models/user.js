@@ -55,7 +55,10 @@ export default (sequelize, DataTypes) => {
             defaultValue: null
         }
     }, {
-            underscored: true
+            underscored: true,
+            defaultScope: {
+                attributes: { exclude: ['password'] }
+            }
         });
 
 
@@ -64,12 +67,14 @@ export default (sequelize, DataTypes) => {
         user.password = utils.hash(user.password);
     });
     User.beforeUpdate((user, options) => {
-        user.password = utils.hash(user.password);
+        if (user.changed('password'))
+            user.password = utils.hash(user.password);
     });
 
     User.associate = (models) => {
-        const { Token } = models;
+        const { Token, Store } = models;
         User.hasMany(Token, { onDelete: 'cascade' });
+        User.hasMany(Store, { onDelete: 'cascade' });
     }
 
     return User;

@@ -65,7 +65,7 @@ if(config.user_token.use) {
     }
 }
 
-app.use(express.static(process.env.NODE_ENV === 'production' ? './frontend' : './inspector'));
+app.use(express.static(process.env.NODE_ENV === 'production' ? './frontend' : './graph'));
 
 /**
  * Load semua routes

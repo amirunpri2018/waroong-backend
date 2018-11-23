@@ -59,10 +59,6 @@ if (action === "route") {
             prompt.message = '';
             prompt.start();
             prompt.get([{
-                name: 'Kolom Search',
-                message: 'Field yang digunakan SQL untuk mencari berdasarkan q (query string)',
-                default: 'name'
-            }, {
                 name: 'Limit',
                 message: 'Default limit untuk collection model',
                 default: 20
@@ -74,7 +70,6 @@ if (action === "route") {
                 name: 'Relasi',
                 message: 'Daftar relasi entitas'
             }], (err, result) => {
-                let search = result['Kolom Search'];
                 let limit = result.Limit;
                 let offset = result.Offset;
                 let relations = result.Relasi;
@@ -84,13 +79,13 @@ if (action === "route") {
                 if (names.length === 1) {
                     data = data.replace('return router;', makeResource({
                         model: _.upperFirst(_.camelCase(pluralize.singular(name))),
-                        limit, offset, search, relations: relations.length ? relations.split(',') : []
+                        limit, offset, relations: relations.length ? relations.split(',') : []
                     }));
                 } else {
                     data = data.replace('return router;', makeResourceChild({
                         parent: names[0],
                         child: names[1],
-                        limit, offset, search, relations: relations.length ? relations.split(',') : []
+                        limit, offset, relations: relations.length ? relations.split(',') : []
                     }));
                 }
 

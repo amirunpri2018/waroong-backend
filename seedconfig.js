@@ -14,6 +14,13 @@ export default {
             type: () => 'user',
             avatar: () => 'base64',
             active: () => 1
+        },
+        Store: {
+            name: faker.commerce.department,
+            location: faker.address.latitude,
+            location_text: faker.address.streetName,
+            description: faker.lorem.lorem,
+            user_id: () => 1
         }
     }
 };

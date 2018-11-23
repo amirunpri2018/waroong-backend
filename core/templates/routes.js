@@ -12,6 +12,7 @@ export default (route) => {
 import { a } from '../middlewares/wrapper/request_wrapper';
 import { requiredPost, requiredGet } from '../middlewares/validator/request_fields';
 import { onlyAuth } from '../middlewares/validator/auth';
+import { parser } from '../middlewares/query/parser';
 
 function ${route}(app, models, socketListener) {
     let router = app.get("express").Router();

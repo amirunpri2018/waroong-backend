@@ -19,6 +19,7 @@ function route(app, models, socketListener) {
         const body = req.body;
         const user = await models.User.findOne({
             include: [{ model: models.Token }],
+            attributes: ['id', 'name', 'email', 'password', 'phone', 'type', 'avatar', 'active', 'verify_code', 'last_login', 'created_at', 'updated_at'],
             where: { email: body.email, active: true },
         });
         if (user) {
@@ -100,6 +101,25 @@ function route(app, models, socketListener) {
         res.setStatus(res.OK);
         res.setData({ message: 'Berhasil' });
         res.go();
+    }));
+
+    router.post('/verify', requiredPost(['email', 'code']), a(async (req, res) => {
+        const { User } = models;
+        let { email, code } = req.body;
+        
+        let user = await User.findOne({ where: { email, verify_code: code } });
+        if (user) {
+            await user.update({ active: true });
+
+            res.setStatus(res.OK);
+            res.setData(user);
+            res.go();
+        } else {
+            res.status(422);
+            res.setStatus(res.GAGAL);
+            res.setMessage('Informasi verifikasi tidak valid. Cek apakah email sudah terdaftar dan kode sudah benar');
+            res.go();
+        }
     }));
 
     return router;

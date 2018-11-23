@@ -55,7 +55,6 @@ export default (config) => {
                                         <span style="font-family: 'Source Sans Pro', Arial, Tahoma, Geneva, sans-serif; color: #000000; font-size: 20px; line-height: 28px;">
                                             Terima kasih atas kepercayaan anda menggunakan layanan kami. Anda menerima
                                             email ini sebagai anggota baru. <br />
-                                            Masukkan kode dibawah untuk verifikasi<br /><br />
                                             <h1 style="text-align: center">${config.code}</h1>
                                             Regards, Tagconn Development Team
                                         </span>

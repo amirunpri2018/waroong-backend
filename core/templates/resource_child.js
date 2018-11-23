@@ -49,7 +49,7 @@ export default (config) => {
     return `/**
     * Daftar ${child} dalam ${parent}
     */
-    router.get('/:id/${childplural}', a(async (req, res) => {
+    router.get('/:id/${childplural}', parser('${child}') a(async (req, res) => {
         // Model
         const { Sequelize, ${parent}, ${child}${modelImportString} } = models;
 
@@ -63,14 +63,12 @@ export default (config) => {
         if (${parentsingular}) {
             // Data ${child}
             let data = await ${child}.findAndCountAll({
-                // Pagination
-                limit, offset,
-                // Search & Filter
-                where: {
-                    ${parentid}: id,
-                    ${config.search}: { [Sequelize.Op.iLike]: '%' + q + '%' }
-                },
-                // Relasi
+                distinct: true,
+                attributes: req.parsed.attributes,
+                where: { ...req.parsed.filter },
+                order: req.parsed.order,
+                limit: req.parsed.limit,
+                offset: req.parsed.offset,
                 include: ${relationString}
             });
             // Response
@@ -89,7 +87,7 @@ export default (config) => {
     /**
      * Satu ${child} dalam ${parent}
      */
-    router.get('/:id/${childplural}/:${childid}', a(async (req, res) => {
+    router.get('/:id/${childplural}/:${childid}', parser('${child}'), a(async (req, res) => {
         // Model
         const { ${parent}, ${child}${modelImportString} } = models;
 
@@ -102,6 +100,7 @@ export default (config) => {
         if (${parentsingular}) {
             // Data ${child}
             let data = await ${child}.findOne({
+                attribute: req.parsed.attributes,
                 where: {
                     ${parentid}: id,
                     id: ${childid}
